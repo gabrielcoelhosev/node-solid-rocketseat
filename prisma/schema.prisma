@@ -15,9 +15,40 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(uuid()) //@id é para definir uma chave primária, o @default serve para definir o tipo do id
-  name  String
-  email String @unique
+  id            String   @id @default(uuid()) //@id é para definir uma chave primária, o @default serve para definir o tipo do id
+  name          String
+  email         String   @unique
+  password_hash String //Hashing -> Aenas cria, não é possível voltar para o original
+  created_at    DateTime @default(now())
+
+  CheckIn CheckIn[] //Um array de relacionamentos, aparece somente no prisma
 
   @@map("users") //usado para trocar o nome da tabela
+}
+
+model CheckIn {
+  id           String    @id @default(uuid())
+  created_at   DateTime  @default(now())
+  is_validated DateTime?
+
+  //nome do relacionamento -> tabela do relacionamento
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  gym    Gym    @relation(fields: [gym_id], references: [id])
+  gym_id String
+
+  @@map("check_ins")
+}
+
+model Gym {
+  id          String    @id @default(uuid())
+  title       String
+  description String? //O ? no final do tipo do dado quer dizer que esse campo é opicional
+  phone       String?
+  latitude    Decimal
+  longitude   Decimal
+  CheckIn     CheckIn[]
+
+  @@map("gyms")
 }
