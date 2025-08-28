@@ -6,4 +6,5 @@ export async function routes(fastify: FastifyInstance){
             message: 'Api online!'
         });
     });
+
 }
